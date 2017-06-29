@@ -6,7 +6,7 @@
   
     Tensorflow, Librosa
   
-  Install following library on your Raspberry:
+  Install following library on your Raspberry only:
   
     Sounddevice
 
