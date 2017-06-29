@@ -22,7 +22,7 @@
 
 # REFERENCE
 
-  Remember to reference this repository in your research work.
+  Remember to reference this project in your research work.
 
 # AUTHORS
  
