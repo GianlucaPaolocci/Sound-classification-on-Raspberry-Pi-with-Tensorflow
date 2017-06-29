@@ -1,6 +1,14 @@
 # SOUND CLASSIFIER WITH TENSORFLOW ON RASPBERRY PI (code will be uploaded soon)
 
-# DOWNLOAD AND BUILD
+#  BUILD THE PROJECT
+
+  Install following Python libraries on your PC/Workstation and Raspberry Pi:
+  
+    Tensorflow, Librosa
+  
+  Install following library on your Raspberry:
+  
+    Sounddevice
 
 1. **DOWNLOAD UrbanSound8K DATASET**
 
