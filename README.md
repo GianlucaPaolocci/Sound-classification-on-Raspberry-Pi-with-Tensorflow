@@ -2,12 +2,15 @@
 
 # DOWNLOAD AND BUILD
 
+1. **DOWNLOAD UrbanSound8K DATASET
 
-1. **CLONE THIS PROJECT:**
+https://serv.cusp.nyu.edu/projects/urbansounddataset/urbansound8k.html
+
+2. **CLONE THIS PROJECT:**
 
 
  
-2. **BUILD AND RUN THE PROJECT:**
+3. **BUILD AND RUN THE PROJECT:**
  
 
 # AUTHORS
