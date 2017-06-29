@@ -4,24 +4,25 @@
 
 1. **DOWNLOAD UrbanSound8K DATASET**
 
-https://serv.cusp.nyu.edu/projects/urbansounddataset/urbansound8k.html
+  https://serv.cusp.nyu.edu/projects/urbansounddataset/urbansound8k.html
 
 2. **TRAIN THE MODEL**
 
-Set the right path where you downloaded the dataset in your code.
-Set the right path where you want to save the trained model
+  Set the right path where you downloaded the dataset in your code.
 
-Run "trainModel.py" on your PC/Workstation
+  Set the right path where you want to save the trained model
+
+  Run "trainModel.py" on your PC/Workstation
 
 3. **RUN THE MODEL**
 
-Export the trained model on you Raspberry Pi
+  Export the trained model on you Raspberry Pi
 
-Run "classiPi.py" on your Raspberry and enjoy!
+  Run "classiPi.py" on your Raspberry and enjoy!
 
 # REFERENCE
 
-Remember to reference this repository in your research work.
+  Remember to reference this repository in your research work.
 
 # AUTHORS
  
