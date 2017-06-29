@@ -28,7 +28,7 @@
 
   Run "classiPi.py" on your Raspberry and enjoy!
 
-# REFERENCE
+# REMEMBER TO
 
   Remember to reference this project in your research work.
 
