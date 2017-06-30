@@ -114,7 +114,6 @@ with tf.Session() as sess:
     sess.run(init)
     for epoch in range(training_epochs):
         _,cost = sess.run([optimizer,cost_function],feed_dict={X:train_x,Y:train_y})
-        cost_history = np.append(cost_history,cost)
         print "Epoch: ", epoch, " cost ", cost
 
     y_pred = sess.run(tf.argmax(y_,1),feed_dict={X: test_x})
