@@ -4,7 +4,7 @@
 
   Install following Python libraries on your PC/Workstation and Raspberry Pi:
   
-    Tensorflow, Librosa
+    Tensorflow, Scikit-learn, Librosa
   
   Install following library on your Raspberry only:
   
