@@ -22,7 +22,7 @@ from sklearn.cross_validation import train_test_split
 def extract_features(file_name):
     X, sample_rate = librosa.load(file_name)
     stft = np.abs(librosa.stft(X))
-    mfccs = np.array(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13).T)
+    mfccs = np.array(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=8).T)
     chroma = np.array(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T)
     mel = np.array(librosa.feature.melspectrogram(X, sr=sample_rate).T)
     contrast = np.array(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T)
