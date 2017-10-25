@@ -18,13 +18,15 @@
 
   Set the right path where you downloaded the dataset in your code.
 
-  Set the right path where you want to save the trained model
+  Set the right path where you want to save the trained model and fit parameters.
 
   Run "trainModel.py" on your PC/Workstation
 
 3. **RUN THE MODEL**
 
-  Export the trained model on you Raspberry Pi
+  Export the trained model on you Raspberry Pi.
+  
+  Export 'fit_params.npy' on your Raspberry Pi.
 
   Run "classiPi.py" on your Raspberry and enjoy!
 
