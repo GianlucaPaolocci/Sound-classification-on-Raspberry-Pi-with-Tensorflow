@@ -5,7 +5,7 @@ import librosa
 import numpy as np
 import tensorflow as tf
 import sounddevice
-import time
+from sklearn.preprocessing import StandardScaler
 
 duration = 0.1  # seconds
 sample_rate=44100
@@ -40,6 +40,9 @@ def extract_feature():
     return features
 
 model_path = "model/model"
+fit_params = np.load('fit_params.npy')
+sc = StandardScaler()
+sc.fit(fit_params)
 
 n_dim = 166
 n_classes = 10
@@ -75,6 +78,7 @@ with tf.Session() as sess:
     sess.run(tf.global_variables())
     while 1:
         feat = extract_feature()
+        feat = sc.transform(feat)
         y_pred = sess.run(tf.argmax(y_, 1), feed_dict={X: feat})
         
         print y_pred
