@@ -7,7 +7,7 @@ import tensorflow as tf
 import sounddevice
 import time
 
-duration = 3  # seconds
+duration = 0.1  # seconds
 sample_rate=44100
 
 
@@ -30,23 +30,18 @@ def extract_feature():
     sounddevice.wait()
     X= np.squeeze(X)
     stft = np.abs(librosa.stft(X))
-    mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=40).T,axis=0)
-    chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T,axis=0)
-    mel = np.mean(librosa.feature.melspectrogram(X, sr=sample_rate).T,axis=0)
-    contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T,axis=0)
-    tonnetz = np.mean(librosa.feature.tonnetz(y=librosa.effects.harmonic(X), sr=sample_rate).T,axis=0)
+    mfccs = np.array(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13).T)
+    chroma = np.array(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T)
+    mel = np.array(librosa.feature.melspectrogram(X, sr=sample_rate).T)
+    contrast = np.array(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T)
+    tonnetz = np.array(librosa.feature.tonnetz(y=librosa.effects.harmonic(X), sr=sample_rate).T)
     ext_features = np.hstack([mfccs,chroma,mel,contrast,tonnetz])
     features = np.vstack([features,ext_features])
     return features
 
-
-
-
 model_path = "model/model"
 
-
-
-n_dim = 193
+n_dim = 166
 n_classes = 10
 n_hidden_units_one = 256
 n_hidden_units_two = 256
