@@ -1,9 +1,11 @@
-
 import glob
 import os
 import librosa
 import numpy as np
-import time
+import tensorflow as tf
+from sklearn.metrics import precision_recall_fscore_support
+from sklearn.preprocessing import StandardScaler
+from sklearn.cross_validation import train_test_split
 
 '''0 = air_conditioner
 1 = car_horn
@@ -14,31 +16,32 @@ import time
 6 = gun_shot
 7 = jackhammer
 8 = siren
-9 = street_music'''
+9 = street_music
+10 = truck'''
 
 
-def extract_feature(file_name):
+def extract_features(file_name):
     X, sample_rate = librosa.load(file_name)
-    #print file_name
     stft = np.abs(librosa.stft(X))
-    mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=40).T,axis=0)
-    chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T,axis=0)
-    mel = np.mean(librosa.feature.melspectrogram(X, sr=sample_rate).T,axis=0)
-    contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T,axis=0)
-    tonnetz = np.mean(librosa.feature.tonnetz(y=librosa.effects.harmonic(X), sr=sample_rate).T,axis=0)
+    mfccs = np.array(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13).T)
+    chroma = np.array(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T)
+    mel = np.array(librosa.feature.melspectrogram(X, sr=sample_rate).T)
+    contrast = np.array(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T)
+    tonnetz = np.array(librosa.feature.tonnetz(y=librosa.effects.harmonic(X), sr=sample_rate).T)
     return mfccs,chroma,mel,contrast,tonnetz
 
 
-
 def parse_audio_files(parent_dir,sub_dirs,file_ext='*.wav'):
-    features, labels, name = np.empty((0,193)), np.empty(0), np.empty(0)
+    features, labels, name = np.empty((0,166)), np.empty(0), np.empty(0)
     for label, sub_dir in enumerate(sub_dirs):
         print sub_dir
         for fn in glob.glob(os.path.join(parent_dir, sub_dir, file_ext)):
-            mfccs, chroma, mel, contrast, tonnetz = extract_feature(fn)
-            ext_features = np.hstack([mfccs,chroma,mel,contrast,tonnetz])
-            features = np.vstack([features,ext_features])
-            labels = np.append(labels, fn.split('-')[1])
+            mfccs, chroma, mel, contrast, tonnetz = extract_features(fn)
+            for i in range(mfccs.shape[0]):
+                ext_features = np.hstack([mfccs, chroma, mel, contrast, tonnetz])
+                features = np.vstack([features,ext_features])
+                l = [fn.split('-')[1]] * (mfccs.shape[0])
+                labels = np.append(labels, l)
     return np.array(features), np.array(labels, dtype = np.int)
 
 def one_hot_encode(labels):
@@ -49,55 +52,62 @@ def one_hot_encode(labels):
     return one_hot_encode
 
 
-parent_dir = 'UrbanSound8K/audio'
+parent_dir = '/home/shared/SM_Paolocci_Russo/SM/UrbanSound8K/audio'
 
 sub_dirs = ['fold1', 'fold2', 'fold3', 'fold4', 'fold5', 'fold6', 'fold7', 'fold8', 'fold9', 'fold10']
 
-
-features, labels = parse_audio_files(parent_dir,sub_dirs)
+try:
+    labels = np.load('labels.npy')
+    features = np.load('features.npy')
+    print("Features and labels found!")
+except:
+    print("Extracting features...")
+    features, labels = parse_audio_files(parent_dir,sub_dirs)
+    with open('features.npy', 'wb') as f1:
+	    np.save(f1,features)
+    with open('labels.npy', 'wb') as f2:
+	    np.save(f2, labels)
 
 labels = one_hot_encode(labels)
 
-train_test_split = np.random.rand(len(features)) < 0.70
-train_x = features[train_test_split]
-train_y = labels[train_test_split]
-test_x = features[~train_test_split]
-test_y = labels[~train_test_split]
+print("Splitting and fitting!")
 
+train_x, test_x, train_y, test_y = train_test_split(features, labels, test_size=0.3, random_state=0)
+sc = StandardScaler()
+sc.fit(train_x)
+with open("fit_params.npy", "wb") as f3:
+    np.save(f3, train_x)
+train_x = sc.transform(train_x)
+test_x = sc.transform(test_x)
 
-# --------------------------------------------------------------------------------------------------------------------------
+print("Training...")
 
-# #### Training Neural Network with TensorFlow
-
-
-import tensorflow as tf
-from sklearn.metrics import precision_recall_fscore_support
+#### Training Neural Network with TensorFlow
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 training_epochs = 5000
 n_dim = features.shape[1]
-n_classes = 10
+n_classes = 11
 n_hidden_units_one = 256
 n_hidden_units_two = 256
 sd = 1 / np.sqrt(n_dim)
-learning_rate = 0.1
-model_path = "model/model"
+learning_rate = 0.01
+model_path = "/home/shared/SM_Paolocci_Russo/SM/original_model/model"
 
-X = tf.placeholder(tf.float32,[None,n_dim])
-Y = tf.placeholder(tf.float32,[None,n_classes])
+X = tf.placeholder(tf.float32, [None, n_dim])
+Y = tf.placeholder(tf.float32, [None, n_classes])
 
-W_1 = tf.Variable(tf.random_normal([n_dim,n_hidden_units_one], mean = 0, stddev=sd))
-b_1 = tf.Variable(tf.random_normal([n_hidden_units_one], mean = 0, stddev=sd))
-h_1 = tf.nn.tanh(tf.matmul(X,W_1) + b_1)
-
+W_1 = tf.Variable(tf.random_normal([n_dim, n_hidden_units_one], mean=0, stddev=sd))
+b_1 = tf.Variable(tf.random_normal([n_hidden_units_one], mean=0, stddev=sd))
+h_1 = tf.nn.tanh(tf.matmul(X, W_1) + b_1)
 
 W_2 = tf.Variable(tf.random_normal([n_hidden_units_one,n_hidden_units_two], mean = 0, stddev=sd))
 b_2 = tf.Variable(tf.random_normal([n_hidden_units_two], mean = 0, stddev=sd))
 h_2 = tf.nn.sigmoid(tf.matmul(h_1,W_2) + b_2 )
 
-
-W = tf.Variable(tf.random_normal([n_hidden_units_two,n_classes], mean = 0, stddev=sd))
-b = tf.Variable(tf.random_normal([n_classes], mean = 0, stddev=sd))
-y_ = tf.nn.softmax(tf.matmul(h_2,W) + b)
+W = tf.Variable(tf.random_normal([n_hidden_units_two, n_classes], mean=0, stddev=sd))
+b = tf.Variable(tf.random_normal([n_classes], mean=0, stddev=sd))
+y_ = tf.nn.softmax(tf.matmul(h_2, W) + b)
 
 init = tf.global_variables_initializer()
 saver = tf.train.Saver()
@@ -109,26 +119,35 @@ correct_prediction = tf.equal(tf.argmax(y_,1), tf.argmax(Y,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 
+batch_size = 100
+
+cost_history = np.empty(shape=[1],dtype=float)
 y_true, y_pred = None, None
 with tf.Session() as sess:
     sess.run(init)
     for epoch in range(training_epochs):
-        _,cost = sess.run([optimizer,cost_function],feed_dict={X:train_x,Y:train_y})
-        print "Epoch: ", epoch, " cost ", cost
+        total_batch = (train_x.shape[0] / batch_size)
+        train_x = shuffle(train_x, random_state=42)
+        train_y = shuffle(train_y, random_state=42)
+        for i in range(total_batch):
+            batch_x = train_x[i*batch_size:i*batch_size+batch_size]
+            batch_y = train_y[i*batch_size:i*batch_size+batch_size]
+            # Run optimization op (backprop) and cost op (to get loss value)
+            _, cost = sess.run([optimizer, cost_function], feed_dict={X: batch_x, Y: batch_y})
+            cost_history = np.append(cost_history, cost)
+        if epoch % 100 == 0:
+            print "Epoch: ", epoch, " cost ", cost
 
     y_pred = sess.run(tf.argmax(y_,1),feed_dict={X: test_x})
     y_true = sess.run(tf.argmax(test_y,1))
-
     #saving model
     save_path = saver.save(sess, model_path)
-    print("Model saved in file: %s" % save_path)
+    print("Model saved at: %s" % save_path)
 
-
-p,r,f,s = precision_recall_fscore_support(y_true, y_pred)#, average='micro')
+p,r,f,s = precision_recall_fscore_support(y_true, y_pred)#average='micro')
 print ("F-Score:"), f
 print ("Precision:"), p
 print ("Recall:"), r
-print ("Support:"), s
 
 
 
