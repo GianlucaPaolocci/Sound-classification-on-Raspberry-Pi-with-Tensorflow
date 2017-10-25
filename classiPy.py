@@ -20,8 +20,7 @@ sample_rate=44100
 6 = gun_shot
 7 = jackhammer
 8 = siren
-9 = street_music
-10 = truck'''
+9 = street_music'''
 
 
 
