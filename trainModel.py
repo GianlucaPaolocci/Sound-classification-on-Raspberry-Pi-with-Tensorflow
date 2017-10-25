@@ -16,8 +16,7 @@ from sklearn.cross_validation import train_test_split
 6 = gun_shot
 7 = jackhammer
 8 = siren
-9 = street_music
-10 = truck'''
+9 = street_music'''
 
 
 def extract_features(file_name):
