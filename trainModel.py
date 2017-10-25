@@ -86,7 +86,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 training_epochs = 5000
 n_dim = features.shape[1]
-n_classes = 11
+n_classes = 10
 n_hidden_units_one = 256
 n_hidden_units_two = 256
 sd = 1 / np.sqrt(n_dim)
