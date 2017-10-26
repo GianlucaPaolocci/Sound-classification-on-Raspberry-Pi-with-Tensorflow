@@ -6,6 +6,7 @@ import tensorflow as tf
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.preprocessing import StandardScaler
 from sklearn.cross_validation import train_test_split
+from sklearn.utils import shuffle
 
 '''0 = air_conditioner
 1 = car_horn
