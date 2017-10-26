@@ -36,11 +36,10 @@ def parse_audio_files(parent_dir,sub_dirs,file_ext='*.wav'):
         print sub_dir
         for fn in glob.glob(os.path.join(parent_dir, sub_dir, file_ext)):
             mfccs, chroma, mel, contrast, tonnetz = extract_features(fn)
-            for i in range(mfccs.shape[0]):
-                ext_features = np.hstack([mfccs, chroma, mel, contrast, tonnetz])
-                features = np.vstack([features,ext_features])
-                l = [fn.split('-')[1]] * (mfccs.shape[0])
-                labels = np.append(labels, l)
+            ext_features = np.hstack([mfccs, chroma, mel, contrast, tonnetz])
+	    features = np.vstack([features,ext_features])
+            l = [fn.split('-')[1]] * (mfccs.shape[0])
+            labels = np.append(labels, l)
     return np.array(features), np.array(labels, dtype = np.int)
 
 def one_hot_encode(labels):
