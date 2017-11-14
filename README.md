@@ -1,5 +1,8 @@
 # SOUND CLASSIFICATION WITH TENSORFLOW ON RASPBERRY PI
 
+![alt text](https://raw.githubusercontent.com/GianlucaPaolocci/Sound-classification-on-Raspberry-Pi-with-Tensorflow/master/img/Immagine.png)
+
+
 #  BUILD THE PROJECT
 
   Install following Python libraries on your PC/Workstation and Raspberry Pi:
