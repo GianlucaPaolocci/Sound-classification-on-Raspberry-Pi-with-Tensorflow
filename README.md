@@ -2,6 +2,8 @@
 
 ![alt text](https://raw.githubusercontent.com/GianlucaPaolocci/Sound-classification-on-Raspberry-Pi-with-Tensorflow/master/img/Immagine.png)
 
+![alt text] (https://github.com/GianlucaPaolocci/Sound-classification-on-Raspberry-Pi-with-Tensorflow&digit=style/plain/29/&reloads=0)
+
 
 #  BUILD THE PROJECT
 
