@@ -2,9 +2,6 @@
 
 ![alt text](https://raw.githubusercontent.com/GianlucaPaolocci/Sound-classification-on-Raspberry-Pi-with-Tensorflow/master/img/Immagine.png)
 
-<img src="http://www.reliablecounter.com/count.php?page=https://github.com/GianlucaPaolocci/Sound-classification-on-Raspberry-Pi-with-Tensorflow&digit=style/plain/29/&reloads=0">
-
-
 #  BUILD THE PROJECT
 
   Install following Python libraries on your PC/Workstation and Raspberry Pi:
