@@ -2,7 +2,7 @@
 
 ![alt text](https://raw.githubusercontent.com/GianlucaPaolocci/Sound-classification-on-Raspberry-Pi-with-Tensorflow/master/img/Immagine.png)
 
-![alt text] (<img src="http://www.reliablecounter.com/count.php?page=https://github.com/GianlucaPaolocci/Sound-classification-on-Raspberry-Pi-with-Tensorflow&digit=style/plain/29/&reloads=0" alt="" title="" border="0">)
+<img src="http://www.reliablecounter.com/count.php?page=https://github.com/GianlucaPaolocci/Sound-classification-on-Raspberry-Pi-with-Tensorflow&digit=style/plain/29/&reloads=0" alt="" title="" border="0">
 
 
 #  BUILD THE PROJECT
