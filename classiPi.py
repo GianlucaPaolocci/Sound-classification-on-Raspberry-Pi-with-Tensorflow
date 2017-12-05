@@ -24,7 +24,7 @@ sample_rate=44100
 
 
 
-def extract_feature():
+def extract_features():
     X = sounddevice.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1)
     sounddevice.wait()
     X= np.squeeze(X)
@@ -76,7 +76,7 @@ with tf.Session() as sess:
     
     sess.run(tf.global_variables())
     while 1:
-        feat = extract_feature()
+        feat = extract_features()
         feat = sc.transform(feat)
         y_pred = sess.run(tf.argmax(y_, 1), feed_dict={X: feat})
         
