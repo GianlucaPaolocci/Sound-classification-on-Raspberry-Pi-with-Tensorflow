@@ -84,7 +84,7 @@ print("Training...")
 #### Training Neural Network with TensorFlow
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-training_epochs = 5000
+training_epochs = 1000
 n_dim = features.shape[1]
 n_classes = 10
 n_hidden_units_one = 256
