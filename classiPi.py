@@ -43,7 +43,7 @@ fit_params = np.load('fit_params.npy')
 sc = StandardScaler()
 sc.fit(fit_params)
 
-n_dim = 166
+n_dim = 161
 n_classes = 10
 n_hidden_units_one = 256
 n_hidden_units_two = 256
