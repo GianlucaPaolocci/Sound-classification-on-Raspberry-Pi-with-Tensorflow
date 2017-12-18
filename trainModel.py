@@ -117,7 +117,7 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost_funct
 correct_prediction = tf.equal(tf.argmax(y_,1), tf.argmax(Y,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-
+patience_cnt  = 0
 batch_size = 100
 
 cost_history = np.empty(shape=[1],dtype=float)
