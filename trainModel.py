@@ -134,17 +134,17 @@ with tf.Session() as sess:
             # Run optimization op (backprop) and cost op (to get loss value)
             _, cost = sess.run([optimizer, cost_function], feed_dict={X: batch_x, Y: batch_y})
         cost_history = np.append(cost_history, cost)
-        if epoch % 100 == 0:
+        if epoch % 1 == 100:
             print "Epoch: ", epoch, " cost ", cost
-	patience = 16
-    	min_delta = 0.01
-    	if epoch > 0 and cost_history[epoch-1] - cost_history[epoch] > min_delta:
-             patience_cnt = 0
-    	else:
-             patience_cnt += 1
-    	if patience_cnt > patience:
-             print("early stopping...")
-             break
+        patience = 16
+        min_delta = 0.01
+        if epoch > 0 and cost_history[epoch - 1] - cost_history[epoch] > min_delta:
+            patience_cnt = 0
+        else:
+            patience_cnt += 1
+        if patience_cnt > patience:
+            print("early stopping...")
+            break
 		
     y_pred = sess.run(tf.argmax(y_,1),feed_dict={X: test_x})
     y_true = sess.run(tf.argmax(test_y,1))
