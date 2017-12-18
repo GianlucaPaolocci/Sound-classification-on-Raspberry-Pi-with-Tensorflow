@@ -32,13 +32,13 @@ def extract_features(file_name):
 
 
 def parse_audio_files(parent_dir,sub_dirs,file_ext='*.wav'):
-    features, labels, name = np.empty((0,166)), np.empty(0), np.empty(0)
+    features, labels, name = np.empty((0,161)), np.empty(0), np.empty(0)
     for label, sub_dir in enumerate(sub_dirs):
         print sub_dir
         for fn in glob.glob(os.path.join(parent_dir, sub_dir, file_ext)):
             mfccs, chroma, mel, contrast, tonnetz = extract_features(fn)
             ext_features = np.hstack([mfccs, chroma, mel, contrast, tonnetz])
-	    features = np.vstack([features,ext_features])
+            features = np.vstack([features,ext_features])
             l = [fn.split('-')[1]] * (mfccs.shape[0])
             labels = np.append(labels, l)
     return np.array(features), np.array(labels, dtype = np.int)
@@ -51,7 +51,7 @@ def one_hot_encode(labels):
     return one_hot_encode
 
 
-parent_dir = 'UrbanSound8K/audio'
+parent_dir = '/home/shared/SM_Paolocci_Russo/SM/UrbanSound8K/audio'
 
 sub_dirs = ['fold1', 'fold2', 'fold3', 'fold4', 'fold5', 'fold6', 'fold7', 'fold8', 'fold9', 'fold10']
 
@@ -133,10 +133,10 @@ with tf.Session() as sess:
             batch_y = train_y[i*batch_size:i*batch_size+batch_size]
             # Run optimization op (backprop) and cost op (to get loss value)
             _, cost = sess.run([optimizer, cost_function], feed_dict={X: batch_x, Y: batch_y})
-            cost_history = np.append(cost_history, cost)
+        cost_history = np.append(cost_history, cost)
         if epoch % 100 == 0:
             print "Epoch: ", epoch, " cost ", cost
-	patience = 15
+	    patience = 16
     	min_delta = 0.01
     	if epoch > 0 and cost_history[epoch-1] - cost_history[epoch] > min_delta:
         	patience_cnt = 0
