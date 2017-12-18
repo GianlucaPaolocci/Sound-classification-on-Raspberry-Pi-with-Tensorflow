@@ -51,7 +51,7 @@ def one_hot_encode(labels):
     return one_hot_encode
 
 
-parent_dir = '/home/shared/SM_Paolocci_Russo/SM/UrbanSound8K/audio'
+parent_dir = 'UrbanSound8K/audio'
 
 sub_dirs = ['fold1', 'fold2', 'fold3', 'fold4', 'fold5', 'fold6', 'fold7', 'fold8', 'fold9', 'fold10']
 
@@ -136,16 +136,16 @@ with tf.Session() as sess:
         cost_history = np.append(cost_history, cost)
         if epoch % 100 == 0:
             print "Epoch: ", epoch, " cost ", cost
-	    patience = 16
+	patience = 16
     	min_delta = 0.01
     	if epoch > 0 and cost_history[epoch-1] - cost_history[epoch] > min_delta:
-        	patience_cnt = 0
+             patience_cnt = 0
     	else:
-        	patience_cnt += 1
+             patience_cnt += 1
     	if patience_cnt > patience:
-        	print("early stopping...")
-        	break
-
+             print("early stopping...")
+             break
+		
     y_pred = sess.run(tf.argmax(y_,1),feed_dict={X: test_x})
     y_true = sess.run(tf.argmax(test_y,1))
     #saving model
