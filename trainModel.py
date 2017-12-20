@@ -32,15 +32,20 @@ def extract_features(file_name):
 
 
 def parse_audio_files(parent_dir,sub_dirs,file_ext='*.wav'):
+    ignored = 0
     features, labels, name = np.empty((0,161)), np.empty(0), np.empty(0)
     for label, sub_dir in enumerate(sub_dirs):
         print sub_dir
         for fn in glob.glob(os.path.join(parent_dir, sub_dir, file_ext)):
-            mfccs, chroma, mel, contrast, tonnetz = extract_features(fn)
-            ext_features = np.hstack([mfccs, chroma, mel, contrast, tonnetz])
-            features = np.vstack([features,ext_features])
-            l = [fn.split('-')[1]] * (mfccs.shape[0])
-            labels = np.append(labels, l)
+            try:
+                mfccs, chroma, mel, contrast, tonnetz = extract_features(fn)
+                ext_features = np.hstack([mfccs, chroma, mel, contrast, tonnetz])
+                features = np.vstack([features,ext_features])
+                l = [fn.split('-')[1]] * (mfccs.shape[0])
+                labels = np.append(labels, l)
+            except:
+                ignored += 1
+    print "Ignored files: ", ignored
     return np.array(features), np.array(labels, dtype = np.int)
 
 def one_hot_encode(labels):
@@ -51,7 +56,7 @@ def one_hot_encode(labels):
     return one_hot_encode
 
 
-parent_dir = 'UrbanSound8K/audio'
+parent_dir = '/home/shared/SM_Paolocci_Russo/SM/UrbanSound8K/audio'
 
 sub_dirs = ['fold1', 'fold2', 'fold3', 'fold4', 'fold5', 'fold6', 'fold7', 'fold8', 'fold9', 'fold10']
 
@@ -91,7 +96,7 @@ n_hidden_units_one = 256
 n_hidden_units_two = 256
 sd = 1 / np.sqrt(n_dim)
 learning_rate = 0.01
-model_path = "model"
+model_path = "model/model"
 
 X = tf.placeholder(tf.float32, [None, n_dim])
 Y = tf.placeholder(tf.float32, [None, n_classes])
@@ -117,35 +122,38 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost_funct
 correct_prediction = tf.equal(tf.argmax(y_,1), tf.argmax(Y,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-patience_cnt  = 0
+
 batch_size = 100
+patience_cnt = 0
+patience = 16
+min_delta = 0.1
+stopping = 0
 
 cost_history = np.empty(shape=[1],dtype=float)
 y_true, y_pred = None, None
 with tf.Session() as sess:
     sess.run(init)
     for epoch in range(training_epochs):
-        total_batch = (train_x.shape[0] / batch_size)
-        train_x = shuffle(train_x, random_state=42)
-        train_y = shuffle(train_y, random_state=42)
-        for i in range(total_batch):
-            batch_x = train_x[i*batch_size:i*batch_size+batch_size]
-            batch_y = train_y[i*batch_size:i*batch_size+batch_size]
-            # Run optimization op (backprop) and cost op (to get loss value)
-            _, cost = sess.run([optimizer, cost_function], feed_dict={X: batch_x, Y: batch_y})
-        cost_history = np.append(cost_history, cost)
-        if epoch % 1 == 100:
-            print "Epoch: ", epoch, " cost ", cost
-        patience = 16
-        min_delta = 0.01
-        if epoch > 0 and cost_history[epoch - 1] - cost_history[epoch] > min_delta:
-            patience_cnt = 0
-        else:
-            patience_cnt += 1
-        if patience_cnt > patience:
-            print("early stopping...")
-            break
-		
+        if stopping == 0:
+            total_batch = (train_x.shape[0] / batch_size)
+            train_x = shuffle(train_x, random_state=42)
+            train_y = shuffle(train_y, random_state=42)
+            for i in range(total_batch):
+                batch_x = train_x[i*batch_size:i*batch_size+batch_size]
+                batch_y = train_y[i*batch_size:i*batch_size+batch_size]
+                # Run optimization op (backprop) and cost op (to get loss value)
+                _, cost = sess.run([optimizer, cost_function], feed_dict={X: batch_x, Y: batch_y})
+            cost_history = np.append(cost_history, cost)
+            if epoch % 100 == 0:
+                print "Epoch: ", epoch, " cost ", cost
+            if epoch > 0 and cost_history[epoch-1] - cost_history[epoch] > min_delta:
+                patience_cnt = 0
+            else:
+                patience_cnt += 1
+            if patience_cnt > patience:
+                print "Early stopping at epoch ", epoch, ", cost ", cost
+                stopping = 1
+
     y_pred = sess.run(tf.argmax(y_,1),feed_dict={X: test_x})
     y_true = sess.run(tf.argmax(test_y,1))
     #saving model
