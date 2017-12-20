@@ -123,7 +123,7 @@ correct_prediction = tf.equal(tf.argmax(y_,1), tf.argmax(Y,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 
-batch_size = 100
+batch_size = 10000
 patience_cnt = 0
 patience = 16
 min_delta = 0.1
