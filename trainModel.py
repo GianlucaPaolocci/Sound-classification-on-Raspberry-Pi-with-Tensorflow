@@ -126,7 +126,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 batch_size = 10000
 patience_cnt = 0
 patience = 16
-min_delta = 0.1
+min_delta = 0.01
 stopping = 0
 
 cost_history = np.empty(shape=[1],dtype=float)
@@ -146,7 +146,7 @@ with tf.Session() as sess:
             cost_history = np.append(cost_history, cost)
             if epoch % 100 == 0:
                 print "Epoch: ", epoch, " cost ", cost
-            if epoch > 0 and cost_history[epoch-1] - cost_history[epoch] > min_delta:
+            if epoch > 0 and abs(cost_history[epoch-1] - cost_history[epoch]) > min_delta:
                 patience_cnt = 0
             else:
                 patience_cnt += 1
