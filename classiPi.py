@@ -38,7 +38,7 @@ def extract_features():
     features = np.vstack([features,ext_features])
     return features
 
-model_path = "model/model"
+model_path = "model"
 fit_params = np.load('fit_params.npy')
 sc = StandardScaler()
 sc.fit(fit_params)
