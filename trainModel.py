@@ -43,8 +43,8 @@ def parse_audio_files(parent_dir,sub_dirs,file_ext='*.wav'):
                 features = np.vstack([features,ext_features])
                 l = [fn.split('-')[1]] * (mfccs.shape[0])
                 labels = np.append(labels, l)
-			except (KeyboardInterrupt, SystemExit):
-				raise
+	    except (KeyboardInterrupt, SystemExit):
+		raise
             except:
                 ignored += 1
     print "Ignored files: ", ignored
