@@ -34,7 +34,7 @@
 
 # REMEMBER TO
 
-  Remember to reference this project in your research work.
+  Remember to reference this project in your works.
 
 # AUTHORS
  
