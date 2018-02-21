@@ -4,6 +4,8 @@
 
 #  BUILD THE PROJECT
 
+  The project is developed and tested with Python 2.7.
+
   Install following Python libraries on your PC/Workstation and Raspberry Pi:
   
     Tensorflow, Scikit-learn, Librosa
@@ -11,6 +13,7 @@
   Install following library on your Raspberry only:
   
     Sounddevice
+  
 
 1. **DOWNLOAD UrbanSound8K DATASET**
 
